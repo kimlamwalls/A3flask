@@ -1,3 +1,5 @@
+import json
+
 import boto3
 import logging
 import boto3
@@ -20,7 +22,7 @@ application.config['SESSION_TYPE'] = 'testing'
 errors = []
 messages = []
 usersDB = db.Table('login')
-musicDB = db.Table('music')
+recordsDB = db.Table('max_hangs')
 subDB = db.Table('subscriptions')
 
 
@@ -57,8 +59,25 @@ def hello_world():  # put application's code here
 def main_page():
     url = 'main_page.html'
     subs = get_subs(session.get("email"))
-    songs = []
-    return render_template(url, errors=errors, messages=messages, subs=subs, songs=songs)
+    records_array = generate_array_for_chart()
+    return render_template(url, errors=errors, messages=messages, subs=subs, records_array=records_array)
+
+
+def generate_array_for_chart():
+    request = recordsDB.scan()
+    records = request['Items']
+    records_array = []
+    i = 0
+    highlight = 'null'
+    for record in records:
+        if record['username'] == session['user_name']:
+            highlight = "point { size: 18; shape-type: star; fill-color: #f70000; }"
+        formatted_record = [int(record['grade']), int(record['weight']), highlight]
+        records_array.append(formatted_record)
+        i += 1
+        highlight = 'null'
+    print(records_array)
+    return records_array
 
 
 @application.route('/remove_sub', methods=['GET', 'POST'])
@@ -105,6 +124,7 @@ def check_login():
                 url = 'main_page.html'
                 subs = get_subs(email)
                 main_page()
+                records_array = generate_array_for_chart()
             else:
                 errors.clear()
                 errors.append('email or password is invalid')
@@ -115,7 +135,7 @@ def check_login():
         errors.clear()
         errors.append('email or password is invalid')
 
-    return render_template(url, messages=messages, errors=errors, subs=subs)
+    return render_template(url, messages=messages, errors=errors, subs=subs, records_array=records_array)
 
 
 @application.route('/logout')
@@ -124,7 +144,6 @@ def logout():
     messages.clear()
     messages.append("You were logged out.")
     return render_template("index.html", errors=errors, messages=messages)
-
 
 
 @application.route('/register', methods=['GET', 'POST'])
@@ -139,7 +158,7 @@ def register():
         candidate_user_name = form_data.get('user_name')
         candidate_password = form_data.get('password')
         file = request.files['profile_img']
-        fileKey = t.upload_image(file,'s3917984')
+        fileKey = t.upload_image(file, 's3917984')
         if candidate_email == '' or candidate_user_name == '' or candidate_password == '':
             errors = []
             errors.append("Please don't leave fields empty")
@@ -181,7 +200,8 @@ def add_record():
         grade = form_data.get('grade')
         bodyweight = form_data.get('bodyweight')
         t.add_data_to_max_hang(username, grade, bodyweight)
-    return render_template(url, errors=errors, messages=messages, songs=songs, subs=subs)
+        records_array = generate_array_for_chart()
+    return render_template(url, errors=errors, messages=messages, songs=songs, subs=subs, records_array=records_array)
 
 
 @application.route('/subscribe', methods=['GET', 'POST'])

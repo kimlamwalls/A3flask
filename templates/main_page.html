@@ -5,6 +5,40 @@
     <title>Main Page</title>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable
+            ([['Grade', 'Max Hang', {'type': 'string', 'role': 'style'}],
+                    {% for record in records_array %}
+                        [{{ record[0] }}, {{ record[1] }}, '{{ record[2] }} '],
+                    {% endfor %}
+                ]
+                {#     [1, 3, null],
+                     [2, 2.5, null],
+                     [3, 3, null],
+                     [4, 4, null],
+                     [5, 4, null],
+                     [6, 3, 'point { size: 18; shape-type: star; fill-color: #f70000; }'],
+                     [7, 2.5, null],
+                     [8, 3, null]#}
+            );
+            var options = {
+                title: 'Finger strength vs Max Grade Climbed',
+                legend: 'none',
+                hAxis: {title: 'Grade', minValue: 15, maxValue: 35},
+                vAxis: {title: 'Max %bw hang on 20mm edge', minValue: 40, maxValue: 200},
+                curveType: 'function',
+                pointSize: 9,
+                dataOpacity: 0.8
+            };
+            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
 </head>
 <body>
 
@@ -40,6 +74,9 @@
 </div>
 
 
+
+
+
 {% with page_title = 'Add record' %}
     {% include "record_form.html" %}
 {% endwith %}
@@ -47,6 +84,8 @@
 {% include "errors.html" %}
 
 {% include "messages.html" %}
+
+<div id="chart_div" style="width: 1000px; height: 800px;"></div>
 
 
 </body>
