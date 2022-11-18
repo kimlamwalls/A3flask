@@ -1,0 +1,47 @@
+<!doctype html>
+
+
+<html>
+
+<head>
+    <title>Login Page</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="login-form-container">
+    <div class="login-form">
+        <div class="login-form-inner">
+
+
+            <h1 class="justify-center">Login Page</h1>
+
+            <form action="/checkLogin" method="post" enctype="multipart/form-data">
+                <label for="email">Email</label>
+                <input type="text" id="email " name="email" required> </input> <br>
+                <label for="username">Password</label>
+                <input type="password" id="password" name="password" required> </input> <br>
+                <button type="submit" value="register" id="register">Login</button>
+            </form>
+            <a class="button" href="{{ url_for('register') }}">Register new user</a>
+
+            {% include "messages.html" %}
+            {% include "errors.html" %}
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<footer>
+
+
+
+
+    {% include "debug_footer.html" %}</footer>
+
+</html>

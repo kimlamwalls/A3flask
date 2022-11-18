@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+    <title>Main Page</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+
+{% with page_title = 'Main Page' %}
+    {% include "header.html" %}
+{% endwith %}
+
+<div class="main-content">
+    <div class="profile-container">
+        Logged in as
+        {{ session['user_name'] }}<br>
+        <img src='{{ session['profile_img_url'] }}' alt='profile image' class="post_image">
+        <li><a href="/logout">Logout </a></li>
+    </div>
+
+    <div class='subscriptions'>
+        {% for sub in subs %}
+            <p class="sub">
+                Title: {{ sub['title'] }}<br>
+                Artist: {{ sub['artist'] }} <br>
+                <br>
+                Year: {{ sub['year'] }}<br>
+                <img class='post_image' src='{{ sub['img_url'] }}' alt='artist image'>
+            <form action="/remove_sub" method="post">
+                <input type="hidden" id="rem-artist" name="rem-artist" value="{{ sub['artist'] }}">
+                <input type="hidden" id="rem-title" name="rem-title" value="{{ sub['title'] }}">
+                <button type="submit" value="login" id="login">Remove Subscription</button>
+            </form>
+            </p>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% with page_title = 'Add record' %}
+    {% include "record_form.html" %}
+{% endwith %}
+
+{% include "errors.html" %}
+
+{% include "messages.html" %}
+
+
+</body>
+</html>

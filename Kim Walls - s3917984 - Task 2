@@ -1,0 +1,37 @@
+Task 2
+
+Random Memes
+
+Objective is to make a simple web application to generate random memes that can be either saved by users or queued up for an automated twitter account to tweet out from a queue.
+
+This application will generate random memes by combining random tweets as captions for random YouTube video screenshots, or random images from a web api source such as twitter media, google image searches prompted by random tweets.
+As a web app open to the public, users will be able to click a "publish" button to queue the tweet to be posted on an official twitter bot account to the application.
+These will then be tweeted out at a constant rate.
+Google chart api will be used to display usage stats of the website via map location and other info on the current status of the position in the queue and other info on the website traffic.
+
+Using python, flask and jinja2 for the back and frontend coding duties running on ec2 instances. As this is what I have used with these technologies so far so this would allow for the best chance of success.
+
+Using ec2 instances for hosting of backend and frontend
+dynamodb for handling of storage and retrieval for links to images pointing to s3 images.
+dynamodb for storage of tweets.
+s3 for image storage
+Twitter API
+YouTube API
+Lambda for backend auto-Scaling
+Elastic Beanstalk for web frontend  auto-scaling
+
+Motivation for this project is simply playfulness and entertainment. This should allow me to expand my knowledge of integrating with external APIs and solving problems such as rendering text on top of images on the ec2 instances.
+
+
+My backup idea which I still haven't discarded, if the first one doesn't work out develop a web app that generates abstract text based creative prompts to the user. Or source snippets of text that feed into an AI compute node.
+inspired by https://en.wikipedia.org/wiki/Oblique_Strategies
+The prompts are at first a small set of these phrases with some random variations.
+The user rates the phrase out of 5 and this trains the machine learning model to prefer similar statements.
+
+The motivation for this idea is to provide some thoughtful guidance on creative dilemmas. Regardless of context, a suggestive prompt can help to get the wheels of creativity back in motion.
+
+Using APIs such as the following:
+Google cloud natural language API
+Amazon SageMaker API
+or other similar AI APIs
+

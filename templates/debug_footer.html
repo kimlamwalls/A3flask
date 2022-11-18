@@ -1,0 +1,32 @@
+<br><br><br>
+
+<h2>Session info</h2>
+  <p>
+      {{ session }}
+  </p>
+
+<p>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <h3> Flash debug messages:</h3>
+        <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+{% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <h3> Flash debug messages:</h3>
+                    <ul class=flashes>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+  </p>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<body>
+
+<br>
+<br>
+
+<form class="form-container" action="/add_record" method="post">
+    <fieldset class="record-form">
+        <h3>Add a record of your max finger strength:</h3><br>
+        <label for="username">Username</label>
+        <input type="text" id="username " name="username" value ={{ session['user_name'] }} readonly> </input> <br>
+        <label for="bodyweight">Your maximum climbing grade sucessfully climbed:</label>
+        <input type="text" id="bodyweight " name="bodyweight"> </input> <br>
+        <label for="grade">Your maximum 10s hang on a 20mm edge in % of bodyweight:</label>
+        <input type="text" id="grade" name="grade"> </input> <br>
+        <button type="submit" value="register" id="register">Submit record</button>
+    </fieldset>
+</form>
+
+<div class='results'>
+    <h2>Results</h2>
+    {% for song in songs %}
+        <br>
+        <p class="sub">
+            Title: {{ song['title'] }}<br>
+            Artist: {{ song['artist'] }} <br>
+            Year: {{ song['year'] }}<br>
+            <img class='post_image' src='{{ song['img_url'] }}' alt='artist image'>
+        <form action="/subscribe" method="post">
+            <input type="hidden" id="sub-artist" name="sub-artist" value="{{ song['artist'] }}">
+            <input type="hidden" id="sub-title" name="sub-title" value="{{ song['title'] }}">
+            <input type="hidden" id="sub-img_url" name="sub-img_url" value="{{ song['img_url'] }}">
+            <input type="hidden" id="sub-web_url" name="sub-web_url" value="{{ song['web_url'] }}">
+            <input type="hidden" id="sub-year" name="sub-year" value="{{ song['year'] }}">
+            <button type="submit" value="login" id="login">Subscribe to this track</button>
+        </form>
+        </p>
+        <br>
+    {% endfor %}
+</div>
+
+
+</body>
+</html>

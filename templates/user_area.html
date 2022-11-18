@@ -1,0 +1,72 @@
+<!doctype html>
+
+
+<html>
+<head>
+    <title>User Area</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<script type="module">
+
+    {% with page_title = 'User Area'%}
+        {% include "header.html" %}
+    {% endwith %}
+
+</script>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <h3> Flash debug messages:</h3>
+        <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<h1>Welcome to Kim's Forum</h1>
+
+<p> You are currently logged in as :<a href={{ url_for('user_page') }}>{{ session['user_name'] }}</a></p>
+
+<p> User ID: {{ session['id'] }}<br>
+    Username:{{ session['user_name'] }}<br>
+    <img class='profile_image' src='{{ session['profile_img_url'] }}' alt='profile image'>
+</p>
+
+<form action="/logout" method="post">
+    <input type="hidden" id="logout" name="logout"> </input> <br>
+    <button type="submit" value="login" id="login">Logout</button>
+</form>
+<br>
+<div>
+    <form action="/forum_post" method="post" enctype="multipart/form-data">
+        <input type="hidden" id="user_name" name="user_name" value= {{ session['user_name'] }}> </input> <br>
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" required> </input> <br>
+        <label for="message">Message</label>
+        <input type="text" id="message" name="message" required> </input> <br>
+        <input type="file" name="image"><br>
+        <button type="submit" value="submit" id="submit">Submit</button>
+    </form>
+</div>
+
+<div class='posts'>
+    {% for post in posts %}
+        <p class="forum_post">
+            Timestamp: {{ post['timestamp'] }}<br>
+            User: {{ post['user_name'] }} <br>
+            <br>
+            Subject: {{ post['subject'] }}<br>
+            Message: {{ post['message'] }}<br>
+            <img class='post_image' src='{{ post['img_url'] }}' alt='post image'>
+        </p>
+    {% endfor %}
+</div>
+
+{% include "errors.html" %}
+
+{% include "messages.html" %}
+
+
+</body>
+</html>
