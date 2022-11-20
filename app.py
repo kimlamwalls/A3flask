@@ -13,12 +13,12 @@ import flask
 from flask import Flask, render_template, flash, request, session
 
 boto3 = boto3.Session()
-application = Flask(__name__)
-application.secret_key = "superSecretKey"
+app = Flask(__name__)
+app.secret_key = "superSecretKey"
 # s3 = boto3.resource('s3')
 s3 = boto3.resource('s3')
 db = boto3.resource('dynamodb')
-application.config['SESSION_TYPE'] = 'testing'
+app.config['SESSION_TYPE'] = 'testing'
 errors = []
 messages = []
 usersDB = db.Table('login')
@@ -50,12 +50,12 @@ def get_subs(email):
     return subs
 
 
-@application.route('/')
+@app.route('/')
 def hello_world():  # put application's code here
     return render_template('index.html')
 
 
-@application.route('/main_page')
+@app.route('/main_page')
 def main_page():
     url = 'main_page.html'
     subs = get_subs(session.get("email"))
@@ -76,11 +76,11 @@ def generate_array_for_chart():
         records_array.append(formatted_record)
         i += 1
         highlight = 'null'
-    print(records_array)
+    # print(records_array)  #debug highlight user record
     return records_array
 
 
-@application.route('/remove_sub', methods=['GET', 'POST'])
+@app.route('/remove_sub', methods=['GET', 'POST'])
 def remove_sub():
     email = session.get("email")
     url = 'main_page.html'
@@ -99,7 +99,7 @@ def remove_sub():
     return render_template(url, errors=errors, messages=messages, subs=subs, songs=songs)
 
 
-@application.route('/checkLogin', methods=['GET', 'POST'])
+@app.route('/checkLogin', methods=['GET', 'POST'])
 def check_login():
     errors = []
     messages = []
@@ -138,7 +138,7 @@ def check_login():
     return render_template(url, messages=messages, errors=errors, subs=subs, records_array=records_array)
 
 
-@application.route('/logout')
+@app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     messages.clear()
@@ -146,7 +146,7 @@ def logout():
     return render_template("index.html", errors=errors, messages=messages)
 
 
-@application.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     errors = []
     messages = []
@@ -179,11 +179,7 @@ def register():
     return render_template(url, errors=errors, messages=messages)
 
 
-def save_new_user(email, username, password):
-    pass
-
-
-@application.route('/add_record', methods=['GET', 'POST'])
+@app.route('/add_record', methods=['GET', 'POST'])
 def add_record():
     url = 'main_page.html'
     songs = []
@@ -202,32 +198,6 @@ def add_record():
         t.add_data_to_max_hang(username, grade, bodyweight)
         records_array = generate_array_for_chart()
     return render_template(url, errors=errors, messages=messages, songs=songs, subs=subs, records_array=records_array)
-
-
-@application.route('/subscribe', methods=['GET', 'POST'])
-def subscribe():
-    url = 'main_page.html'
-    songs = []
-    subs = []
-    subs = get_subs(session.get("email"))
-    if request.method == 'POST':
-        form_data = request.form
-        title = ''
-        artist = ''
-        email = session.get("email")
-        img_url = ''
-        web_url = ''
-        year = ''
-        title = form_data.get('sub-title')
-        artist = form_data.get('sub-artist')
-        img_url = form_data.get('sub-img_url')
-        web_url = form_data.get('sub-web_url')
-        year = form_data.get('sub-year')
-        print(title + " before store function")
-        t.store_subscription(subDB, email, artist, title, img_url, web_url, year)
-        messages.append(session.get("user_name"))
-        subs = get_subs(session.get("email"))
-    return render_template(url, errors=errors, messages=messages, songs=songs, subs=subs)
 
 
 def register_page():

@@ -71,21 +71,23 @@
             </p>
         {% endfor %}
     </div>
+
+{% with page_title = 'Add record' %}
+    {% include "record_form.html" %}
+{% endwith %}
+
+<div id="chart_div" style="width: 800px; height: 700px;"></div>
 </div>
 
 
 
 
 
-{% with page_title = 'Add record' %}
-    {% include "record_form.html" %}
-{% endwith %}
 
 {% include "errors.html" %}
 
 {% include "messages.html" %}
 
-<div id="chart_div" style="width: 1000px; height: 800px;"></div>
 
 
 </body>
